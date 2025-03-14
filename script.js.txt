@@ -19,8 +19,8 @@ const winningConditions = [
 ];
 
 function checkWin() {
-  for (let i = 0; i < winningConditions.length; i++) {
-    const [a, b, c] = winningConditions[i];
+  for (let condition of winningConditions) {
+    const [a, b, c] = condition;
     if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
       return gameBoard[a];
     }
@@ -53,7 +53,7 @@ function computerMove() {
   if (!gameActive || currentPlayer !== 'O') return;
 
   const move = bestMove(gameBoard);
-  if (move) {
+  if (move !== undefined) {
     gameBoard[move] = currentPlayer;
     cells[move].textContent = currentPlayer;
     cells[move].classList.add(currentPlayer);
@@ -91,7 +91,7 @@ function resetGame() {
   });
 }
 
-function minimax(board, isMaximizing) {
+function minimax(board, depth, isMaximizing) {
   const scores = {
     X: -1,
     O: 1,
@@ -108,7 +108,7 @@ function minimax(board, isMaximizing) {
     for (let i = 0; i < board.length; i++) {
       if (board[i] === '') {
         board[i] = 'O'; // AI
-        let score = minimax(board, false);
+        let score = minimax(board, depth + 1, false);
         board[i] = ''; // Undo move
         bestScore = Math.max(score, bestScore);
       }
@@ -119,7 +119,7 @@ function minimax(board, isMaximizing) {
     for (let i = 0; i < board.length; i++) {
       if (board[i] === '') {
         board[i] = 'X'; // Player
-        let score = minimax(board, true);
+        let score = minimax(board, depth + 1, true);
         board[i] = ''; // Undo move
         bestScore = Math.min(score, bestScore);
       }
@@ -134,7 +134,7 @@ function bestMove(board) {
   for (let i = 0; i < board.length; i++) {
     if (board[i] === '') {
       board[i] = 'O'; // AI
-      let score = minimax(board, false);
+      let score = minimax(board, 0, false);
       board[i] = ''; // Undo move
       if (score > bestScore) {
         bestScore = score;
