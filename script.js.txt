@@ -18,17 +18,17 @@ const winningConditions = [
   [2, 4, 6]
 ];
 
-function checkWin() {
+function checkWin(board) {
   for (let condition of winningConditions) {
     const [a, b, c] = condition;
-    if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
-      return gameBoard[a];
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      return board[a]; // Return the winner ('X' or 'O')
     }
   }
-  if (!gameBoard.includes('')) {
-    return 'draw'; // Add this to indicate a draw
+  if (!board.includes('')) {
+    return 'draw'; // Return 'draw' if the board is full and no winner
   }
-  return null;
+  return null; // Return null if the game is not yet over
 }
 
 function checkDraw() {
@@ -48,7 +48,7 @@ function handleCellClick(e) {
   checkGameStatus();
   if (gameActive) {
     switchPlayer();
-    computerMove();
+    setTimeout(computerMove, 500); // Delay AI move for better UX
   }
 }
 
@@ -75,7 +75,7 @@ function switchPlayer() {
 }
 
 function checkGameStatus() {
-  const winner = checkWin();
+  const winner = checkWin(gameBoard);
   if (winner) {
     status.textContent = `Player ${winner} wins!`;
     gameActive = false;
@@ -98,21 +98,21 @@ function resetGame() {
 
 function minimax(board, depth, isMaximizing) {
   const scores = {
-    X: -10 + depth, // Penalize the player for taking longer
-    O: 10 - depth,  // Reward the AI for faster wins
+    X: -10,
+    O: 10,
     draw: 0
   };
 
-  let result = checkWin();
+  let result = checkWin(board);
   if (result !== null) {
-    return scores[result]; // Return score for win, lose, or draw
+    return scores[result]; // Return the score for the result
   }
 
   if (isMaximizing) {
     let bestScore = -Infinity;
     for (let i = 0; i < board.length; i++) {
       if (board[i] === '') {
-        board[i] = 'O'; // AI makes a move
+        board[i] = 'O'; // AI plays
         let score = minimax(board, depth + 1, false);
         board[i] = ''; // Undo move
         bestScore = Math.max(score, bestScore);
@@ -123,7 +123,7 @@ function minimax(board, depth, isMaximizing) {
     let bestScore = Infinity;
     for (let i = 0; i < board.length; i++) {
       if (board[i] === '') {
-        board[i] = 'X'; // Player makes a move
+        board[i] = 'X'; // Player plays
         let score = minimax(board, depth + 1, true);
         board[i] = ''; // Undo move
         bestScore = Math.min(score, bestScore);
@@ -143,11 +143,11 @@ function bestMove(board) {
       board[i] = ''; // Undo move
       if (score > bestScore) {
         bestScore = score;
-        move = i;
+        move = i; // Update best move
       }
     }
   }
-  return move !== -1 ? move : board.findIndex(cell => cell === ''); // Fallback to first available move
+  return move !== -1 ? move : board.findIndex(cell => cell === '');
 }
 
 cells.forEach(cell => cell.addEventListener('click', handleCellClick));
