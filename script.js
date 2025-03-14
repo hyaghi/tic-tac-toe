@@ -91,26 +91,25 @@ const board = document.querySelector('.board');
       });
     }
 
-    function minimax(board, depth, isMaximizing) {
-        const scores = {
-            X: -1,
-            O: 1,
-            draw: 0
-        };
-
-        let result = checkWinner(board);
-        if (result !== null) {
-            return scores[result];
+    function minimax(board, depth, isMaximizing) { 
+        const scores = { 
+            X: -1, 
+            O: 1, 
+            draw: 0 
+        }; 
+        let result = checkWin(); // Use checkWin function 
+        if (result !== null) { 
+            return scores[result]; 
         }
-
         if (isMaximizing) {
             let bestScore = -Infinity;
             for (let i = 0; i < board.length; i++) {
-                for (let j = 0; j < board[i].length; j++) {
-                    if (board[i][j] === '') {
-                        board[i][j] = 'O'; // AI
-                        let score = minimax(board, depth + 1, false);
-                         board[i][j] = ''; // Undo move
+                for (let i = 0; i < board.length; i++) { 
+                    if (board[i] === '') { 
+                        board[i] = isMaximizing ? 'O' : 'X'; // Use the correct player 
+                        let score = minimax(board, depth + 1, !isMaximizing); 
+                        board[i] = ''; // Undo move
+
                          bestScore = Math.max(score, bestScore);
                     }
                 }
