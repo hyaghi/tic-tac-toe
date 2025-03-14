@@ -99,6 +99,67 @@ const board = document.querySelector('.board');
       });
     }
 
+    function minimax(board, depth, isMaximizing) {
+        const scores = {
+            X: -1,
+            O: 1,
+            draw: 0
+        };
+
+        let result = checkWinner(board);
+        if (result !== null) {
+            return scores[result];
+        }
+
+        if (isMaximizing) {
+            let bestScore = -Infinity;
+            for (let i = 0; i < board.length; i++) {
+                for (let j = 0; j < board[i].length; j++) {
+                    if (board[i][j] === '') {
+                        board[i][j] = 'O'; // AI
+                        let score = minimax(board, depth + 1, false);
+                         board[i][j] = ''; // Undo move
+                         bestScore = Math.max(score, bestScore);
+                    }
+                }
+            }
+            return bestScore;
+        } else {
+            let bestScore = Infinity;
+            for (let i = 0; i < board.length; i++) {
+                for (let j = 0; j < board[i].length; j++) {
+                    if (board[i][j] === '') {
+                        board[i][j] = 'X'; // Player
+                        let score = minimax(board, depth + 1, true);
+                        board[i][j] = ''; // Undo move
+                        bestScore = Math.min(score, bestScore);
+                    }
+                }
+            }
+            return bestScore;
+        }
+    }
+
+    function bestMove(board) {
+        let move;
+        let bestScore = -Infinity;
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if (board[i][j] === '') {
+                    board[i][j] = 'O'; // AI
+                    let score = minimax(board, 0, false);
+                    board[i][j] = ''; // Undo move
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move = { i, j };
+                    }
+                }
+            }
+        }
+        return move;
+    }
+
+
     cells.forEach(cell => cell.addEventListener('click', handleCellClick));
     resetBtn.addEventListener('click', resetGame);
 
