@@ -1,26 +1,375 @@
 <!DOCTYPE html>
-    <html>
-    <head>
-      <title>Tic Tac Toe</title>
-      <link rel="stylesheet" href="style.css">
-    </head>
-    <body>
-      <h1>Tic Tac Toe</h1>
-      <div class="container">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yaghi's Tic Tac Toe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6e45e2, #88d3ce);
+            color: white;
+            transition: background 0.5s ease;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .cell:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .X {
+            color: #ff7675;
+            text-shadow: 0 0 10px rgba(255, 118, 117, 0.7);
+        }
+
+        .O {
+            color: #74b9ff;
+            text-shadow: 0 0 10px rgba(116, 185, 255, 0.7);
+        }
+
+        .status {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .reset {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            margin-top: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .reset:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .reset:active {
+            transform: translateY(1px);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+            }
+        }
+
+        /* Animations */
+        @keyframes win-animation {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .winner-cell {
+            animation: win-animation 0.5s ease infinite;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .board {
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+            }
+            
+            .cell {
+                font-size: 2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Colorful Tic Tac Toe</h1>
+    <div class="game-container">
+        <div class="status">Player X's turn</div>
         <div class="board">
-          <div class="cell" data-index="0"></div>
-          <div class="cell" data-index="1"></div>
-          <div class="cell" data-index="2"></div>
-          <div class="cell" data-index="3"></div>
-          <div class="cell" data-index="4"></div>
-          <div class="cell" data-index="5"></div>
-          <div class="cell" data-index="6"></div>
-          <div class="cell" data-index="7"></div>
-          <div class="cell" data-index="8"></div>
+            <div class="cell" data-index="0"></div>
+            <div class="cell" data-index="1"></div>
+            <div class="cell" data-index="2"></div>
+            <div class="cell" data-index="3"></div>
+            <div class="cell" data-index="4"></div>
+            <div class="cell" data-index="5"></div>
+            <div class="cell" data-index="6"></div>
+            <div class="cell" data-index="7"></div>
+            <div class="cell" data-index="8"></div>
         </div>
-        <div class="status"></div>
-        <button class="reset">Reset</button>
-      </div>
-      <script type="module" src="script.js"></script>
-    </body>
-    </html>
+        <button class="reset">Reset Game</button>
+    </div>
+    <script>
+        // JavaScript code goes here
+        const board = document.querySelector('.board');
+        const cells = document.querySelectorAll('.cell');
+        const status = document.querySelector('.status');
+        const resetBtn = document.querySelector('.reset');
+        const scores = {
+          X: -10,  // Human player
+          O: 10,   // AI
+          draw: 0
+        };
+
+        let currentPlayer = 'X';
+        let gameBoard = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        const winningConditions = [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6]
+        ];
+
+        function checkWin(board) {
+          for (let condition of winningConditions) {
+            const [a, b, c] = condition;
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+              // Highlight winning cells
+              if (gameActive && board === gameBoard) {
+                cells[a].classList.add('winner-cell');
+                cells[b].classList.add('winner-cell');
+                cells[c].classList.add('winner-cell');
+                
+                // Change background based on winner
+                document.body.style.background = board[a] === 'X' ? 
+                  'linear-gradient(135deg, #ff7675, #e17055)' : 
+                  'linear-gradient(135deg, #74b9ff, #0984e3)';
+              }
+              return board[a]; // Return the winner ('X' or 'O')
+            }
+          }
+          if (!board.includes('')) {
+            if (gameActive && board === gameBoard) {
+              // Change background for draw
+              document.body.style.background = 'linear-gradient(135deg, #a29bfe, #6c5ce7)';
+            }
+            return 'draw'; // Return 'draw' if the board is full and no winner
+          }
+          return null; // Return null if the game is not yet over
+        }
+
+        function checkDraw() {
+          return !gameBoard.includes('');
+        }
+
+        function handleCellClick(e) {
+          const index = e.target.dataset.index;
+
+          if (gameBoard[index] !== '' || !gameActive || currentPlayer !== 'X') {
+            return;
+          }
+
+          gameBoard[index] = currentPlayer;
+          e.target.textContent = currentPlayer;
+          e.target.classList.add(currentPlayer);
+          
+          // Add pop animation
+          e.target.style.animation = 'pop 0.3s ease-out';
+          setTimeout(() => e.target.style.animation = '', 300);
+          
+          checkGameStatus();
+          if (gameActive) {
+            switchPlayer();
+            setTimeout(computerMove, 500); // Delay AI move for better UX
+          }
+        }
+
+        function computerMove() {
+          if (!gameActive || currentPlayer !== 'O') return;
+
+          const move = bestMove(gameBoard);
+          if (move !== undefined) {
+            gameBoard[move] = currentPlayer;
+            cells[move].textContent = currentPlayer;
+            cells[move].classList.add(currentPlayer);
+            
+            // Add pop animation
+            cells[move].style.animation = 'pop 0.3s ease-out';
+            setTimeout(() => cells[move].style.animation = '', 300);
+            
+            checkGameStatus();
+            if (gameActive) {
+              switchPlayer();
+            }
+          }
+        }
+
+        function switchPlayer() {
+          currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          if (gameActive) {
+            status.textContent = `Player ${currentPlayer}'s turn`;
+          }
+        }
+
+        function checkGameStatus() {
+          const winner = checkWin(gameBoard);
+          if (winner) {
+            status.textContent = winner === 'draw' ? 
+              'It\'s a draw!' : 
+              `Player ${winner} wins!`;
+            gameActive = false;
+          } else if (checkDraw()) {
+            status.textContent = 'It\'s a draw!';
+            gameActive = false;
+          }
+        }
+
+        function resetGame() {
+          currentPlayer = 'X';
+          gameBoard = ['', '', '', '', '', '', '', '', ''];
+          gameActive = true;
+          status.textContent = `Player ${currentPlayer}'s turn`;
+          cells.forEach(cell => {
+            cell.textContent = '';
+            cell.classList.remove('X', 'O', 'winner-cell');
+          });
+          // Reset background
+          document.body.style.background = 'linear-gradient(135deg, #6e45e2, #88d3ce)';
+        }
+
+
+function minimax(board, depth, isMaximizing) {
+  const result = checkWin(board);
+  
+  if (result === 'O') return 10 - depth; // AI wins
+  if (result === 'X') return depth - 10; // Human wins
+  if (result === 'draw') return 0;
+
+  if (isMaximizing) {
+    let bestScore = -Infinity;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === '') {
+        board[i] = 'O'; // AI's move
+        let score = minimax(board, depth + 1, false);
+        board[i] = ''; // Reset
+        bestScore = Math.max(bestScore, score);
+      }
+    }
+    return bestScore;
+  } else {
+    let bestScore = Infinity;
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === '') {
+        board[i] = 'X'; // Human's move
+        let score = minimax(board, depth + 1, true);
+        board[i] = ''; // Reset
+        bestScore = Math.min(bestScore, score);
+      }
+    }
+    return bestScore;
+  }
+}
+
+function bestMove(board) {
+  let bestScore = -Infinity;
+  let move = null;
+
+  for (let i = 0; i < board.length; i++) {
+    if (board[i] === '') {
+      board[i] = 'O'; // AI's move
+      let score = minimax(board, 0, false);
+      board[i] = ''; // Reset
+
+      if (score > bestScore) {
+        bestScore = score;
+        move = i;
+      }
+    }
+  }
+  
+  return move !== null ? move : Math.floor(Math.random() * 9); // Random move if no best move found
+}
+
+ 
+
+        // Add pop animation
+        document.head.insertAdjacentHTML('beforeend', `
+          <style>
+            @keyframes pop {
+              0% { transform: scale(1); }
+              50% { transform: scale(1.2); }
+              100% { transform: scale(1); }
+            }
+          </style>
+        `);
+
+        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+        resetBtn.addEventListener('click', resetGame);
+
+        status.textContent = `Player ${currentPlayer}'s turn`;
+    </script>
+</body>
+</html>
